@@ -15,7 +15,7 @@ const Header = ({ theme, setTheme }) => {
   return (
     <div className={`header ${theme}`}>
       <Link to="/">
-        <div className="logo">Movie App</div>
+        <div className="logo">Cinema Vault</div>
       </Link>
 
       <div className='images'>

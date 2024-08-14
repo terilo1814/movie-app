@@ -13,13 +13,13 @@ function App() {
   return (
 
     <>
-       <div className={`app ${theme}-theme`}>
+      <div className={`app ${theme}-theme`}>
         <Router>
-          <Header theme={theme} setTheme={setTheme}/>
+          <Header theme={theme} setTheme={setTheme} />
           <div className='container'>
             <Routes>
               <Route path='/' exact element={<Home />} />
-              <Route path='/movie/:imdbID' element={<MovieDetail />} />
+              <Route path='/movie/:imdbID' element={<MovieDetail theme={theme} />} />
               <Route path='*' element={<PageNotFound />} />
             </Routes>
           </div>
