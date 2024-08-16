@@ -4,18 +4,16 @@ import { APIKey } from '../../common/apis/movieApiKey'
 
 export const fetchAsyncMovies = createAsyncThunk(
     "movies/fetchAsyncMovies",
-    async () => {
-        const movieText = 'Harry'
-        const response = await movieApi.get(`?apiKey=${APIKey}&s=${movieText}&type=movie`)
+    async (term) => {
+        const response = await movieApi.get(`?apiKey=${APIKey}&s=${term}&type=movie`)
         return response.data
     }
 )
 
 export const fetchAsyncSeries = createAsyncThunk(
     "movies/fetchAsyncSeries",
-    async () => {
-        const seriesText = 'Friends'
-        const response = await movieApi.get(`?apiKey=${APIKey}&s=${seriesText}&type=series`)
+    async (term) => {
+        const response = await movieApi.get(`?apiKey=${APIKey}&s=${term}&type=series`)
         return response.data
     }
 )
@@ -32,6 +30,7 @@ const initialState = {
     movies: {},
     series: {},
     selectMovieorSeries: {},
+    isLoading: false,
 };
 
 const movieSlice = createSlice({
@@ -39,33 +38,38 @@ const movieSlice = createSlice({
     initialState,
     reducers: {
         removeSelectedMovieOrShow: (state) => {
-            state.selectMovieorSeries= {};
+            state.selectMovieorSeries = {};
         },
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchAsyncMovies.pending, () => {
-                console.log('pending');
+            .addCase(fetchAsyncMovies.pending, (state) => {
+                state.isLoading = true;
             })
             .addCase(fetchAsyncMovies.fulfilled, (state, { payload }) => {
-                console.log('fulfilled');
+                state.isLoading = false;
                 state.movies = payload;
             })
-            .addCase(fetchAsyncMovies.rejected, () => {
-                console.log('rejected');
+            .addCase(fetchAsyncMovies.rejected, (state) => {
+                state.isLoading = false;
             })
 
 
+            .addCase(fetchAsyncSeries.pending, (state) => {
+                state.isLoading = true;
+            })
             .addCase(fetchAsyncSeries.fulfilled, (state, { payload }) => {
-                console.log('fulfilled')
-                state.series = payload
+                state.isLoading = false;
+                state.series = payload;
+            })
+            .addCase(fetchAsyncSeries.rejected, (state) => {
+                state.isLoading = false;
             })
 
 
             .addCase(fetchAsyncMovieorSeriesDetail.fulfilled, (state, { payload }) => {
-                console.log('fulfilled')
-                state.selectMovieorSeries = payload
-            })
+                state.selectMovieorSeries = payload;
+            });
     },
 });
 
